@@ -1,0 +1,212 @@
+/*index.css*/
+
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700&display=swap");
+
+* {
+ box-sizing: border-box;
+ padding: 0;
+ margin: 0;
+}
+
+
+
+body {
+ background-color:lightyellow;
+ color: var(--text-color);
+ font-family: var(--body-font);
+}
+
+ul {
+ list-style: none;
+}
+
+a {
+ text-decoration: none;
+}
+
+table{
+    margin: 1rem auto;
+    border-radius: 1rem;
+    border: 1rem hidden #443C68;
+    border-collapse: collapse;
+    box-shadow: 0 0 0 1px black;
+    overflow: hidden;
+    max-width: 80rem;
+}
+thead{
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(24, 24, 165);
+    color: #fff;
+}
+
+th, td{
+    border: 1px solid #443C68;
+    min-width: 15em;
+    padding: 1.5rem;
+    line-height: 1;
+}
+
+td{
+    font-size: 1rem;
+}
+
+/*CREATE EXAM PAGE*/
+
+.CreateExam{
+    font-family: "Montserrat";
+    font-weight: 600;
+    width: 100vw;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    height: auto; 
+    padding: 20px;
+    border: 5px solid rgb(24, 24, 185);
+    border-radius: 5px;
+}
+
+.formContainer label{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.formContainer input{
+    height: 30px;
+}
+
+
+.formContainer button {
+    margin-top: 15px;
+    height: 40px;
+    border: none;
+    background-color: lightskyblue;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+}
+
+.formContainer button:hover{
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+.formContainer span{
+    color: red;
+    font-size: 10px;
+}
+
+/*SHOW THE LIST OF CURRENT EXAMS RESULTS as FLIPBOXES*/
+
+.exams{
+    display: grid;
+    flex-direction: row;
+    margin-top: 50px;
+    font-size: 20px;
+    font-family: "Montserrat";
+    width: 300px;
+    height: 80px;
+    border-radius: 10px;
+
+    box-shadow: rgba(99, 99, 99, 0.2) 0px, 2px, 8px, 0px;
+}
+
+.flip-box {
+    background-color: transparent;
+    width: 300px;
+    height: 50px;
+    border: 1px solid #f1f1f1;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+  
+  /* This container is needed to position the front and back side */
+  .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.2s;
+    transform-style: preserve-3d;
+  }
+  
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-box:hover .flip-box-inner {
+    transform: rotateX(180deg);
+  }
+  
+  /* Position the front and back side */
+  .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  /* Style the front side */
+  .flip-box-front {
+    background-color: rgb(24, 24, 165);
+    color: white;
+    align-items: center;
+    
+  }
+  
+  /* Style the back side */
+  .flip-box-back {
+    background-color: rgb(212, 98, 117);
+    color: white;
+    transform: rotateX(180deg);
+  }
+
+.exams{
+    float: left;
+    width: 33.3%;
+}
+
+  
+.listofexams::after{
+    content: "";
+    display: table;
+    clear: both;
+}
+@media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }
+
+.add-exam-btn{
+
+    font-size: 16px;
+    color: white;
+    margin-top: 10px;
+    align-items: flex-end;
+    background-color: blue;
+    font-family: "Montserrat";
+    font-weight: 600;
+    text-align: center;
+    height: 50px;
+    width: 200px;
+    border-radius: 0.7rem;
+    margin-right: 80px;
+
+
+
+}
+.add-exam-btn:hover {
+    background-color: #aab6c4; /* Darker shade of blue on hover */
+    color:black;
+    box-shadow:rgb(189, 17, 17);
+  }
+  
+.add-exam-btn:active {
+    background-color: black; /* Even darker shade on active */
+  }

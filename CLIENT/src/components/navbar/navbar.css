@@ -1,0 +1,66 @@
+/*navbar.css*/
+
+Navbar.css
+.header {
+ position: fixed;
+ width: 100%;
+ top: 0;
+ left: 0;
+ background-color: transparent;
+
+}
+
+.nav-container{
+
+  
+  background-color:midnightblue;
+  height:80px;
+
+}
+
+
+ .nav__list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 150px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: large;
+  color: white;
+ }
+ 
+ .nav__link {
+  color: whitesmoke;
+  font-weight:600;
+  transition: color 0.2s;
+ }
+ .nav__link:hover {
+  color:black;
+ }
+ 
+
+ .nav__logo{
+  font-family: "Montserrat";
+  color: whitesmoke;
+  font-style: normal;
+  font-size: xx-large;
+  font-weight: bolder;
+  text-align: center;
+  display: flex;
+  align-content: center;
+  
+ }
+ 
+ .logo_adjust{
+  height: 50px;
+
+ }
+
+ .nav-menu{
+  display: flex;
+  gap: 20px;
+  
+ }
+
