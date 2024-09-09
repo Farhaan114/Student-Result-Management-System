@@ -43,8 +43,9 @@ This project is a **Student Results Management System** built using **React.js**
 ### Marks Management
 - Input and update marks for students.
 - Display the highest, lowest, and average marks for any exam.
-- Perform validations to prevent negative values (except -1 for absentees).
  ![ExamMarks](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ExamMarks.png)
+- Perform validations to prevent negative values (except -1 for absentees).
+   ![NegativeChecker](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/negativemarks.png)
 - Edit and update existing marks for individual students.
  ![Search by ID](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/search%20for%20id.png)
  ![Enter Marks](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/enter%20marks.png)
