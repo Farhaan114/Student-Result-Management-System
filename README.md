@@ -79,8 +79,8 @@ This project is a **Student Results Management System** built using **React.js**
 
 ## Technologies Used
 
-- **Frontend**: React.js, Bootstrap, Axios <img src="https://www.pngwing.com/en/search?q=react" align="right" width="50">
-- **Backend**: Express.js, MySQL
+- **Frontend**: React.js, CSS, Axios 
+- **Backend**: Node.js, Express.js, MySQL
 - **Database**: MySQL with relational schema
 - **Version Control**: Git & GitHub
 
