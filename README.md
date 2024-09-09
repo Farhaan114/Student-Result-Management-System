@@ -36,6 +36,7 @@ This project is a **Student Results Management System** built using **React.js**
  ![Display classes in each year](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/View%20classes%20in%20years.png)
 
 - View student details (ID, name, class, year, email).
+- A modal will be displayed that displays all the students in a class
  ![Class Details](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Class%20Details.png)
 
 
