@@ -6,6 +6,10 @@ This project is a **Student Results Management System** built using **React.js**
 
 ## Features
 
+### Dashboard
+- A landing page for the admin to quickly see stats on exams, students and pass %.
+  ![Dashboard](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ADMINHOME.png)
+
 ### Exam Management
 - Add new exams with details like course code, exam name, year, and pass/fail criteria.
 - Delete exams and view existing ones in a scrollable table.
