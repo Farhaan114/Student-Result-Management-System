@@ -18,7 +18,7 @@ export default function Login(){
     setUsername('');
     setPassword('');
 
-    navigate("/AdminHome");
+    navigate("/");
   } 
 
   
@@ -34,20 +34,22 @@ export default function Login(){
                 </div>
             </header>
             
-<div style={{ padding: '20px' }}>
+                <div className="left-half">
 
-    <h1 className="title">Admin Login</h1>
-    
-    <form className="login-form" onSubmit={handleSubmitLogin}>
-                <label htmlFor="username">Username:</label>
-                <input className="login-fields" type="text" id="username" autoComplete="off" value={username} onChange={(e) => setUsername(e.target.value)}required/>
+                    <h1 className="title1">Admin Login</h1>
+                    
+                    <form className="login-form" onSubmit={handleSubmitLogin}>
+                                <label htmlFor="username">Username:</label>
+                                <input className="medium-input" type="text" id="username" autoComplete="off" value={username} onChange={(e) => setUsername(e.target.value)}required/>
 
-                <label htmlFor="password">Password:</label>
-                <input className="login-fields" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}required/>
-
-        <button className="LOgin-button" type="submit" >Login</button>
-      </form>
-</div>
-        </div>
+                                <label htmlFor="password">Password:</label>
+                                <input className="medium-input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}required/>
+                        <div className="Box-Container">
+                        <button className="add-std-btn" type="submit" >Login</button>
+                        </div>
+                      </form>
+                </div>  
+            
+          </div>
     );
 }

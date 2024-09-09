@@ -1,25 +1,22 @@
-/*navbar.css*/
-
-Navbar.css
 .header {
- position: fixed;
- width: 100%;
- top: 0;
- left: 0;
- background-color: transparent;
-
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  z-index: 1000; /* Ensure navbar is on top of other content */
 }
 
-.nav-container{
-
-  
-  background-color:midnightblue;
-  height:80px;
-
+.nav-container {
+  background-color: midnightblue;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 
-
- .nav__list {
+.nav__list {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -29,38 +26,103 @@ Navbar.css
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: large;
   color: white;
- }
- 
- .nav__link {
-  color: whitesmoke;
-  font-weight:600;
-  transition: color 0.2s;
- }
- .nav__link:hover {
-  color:black;
- }
- 
+}
 
- .nav__logo{
+.nav__link {
+  color: whitesmoke;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.nav__link:hover {
+  color: black;
+}
+
+.nav__logo {
   font-family: "Montserrat";
   color: whitesmoke;
   font-style: normal;
-  font-size: xx-large;
+  padding-top: 1.5em;
+  font-size: 20px;
   font-weight: bolder;
   text-align: center;
   display: flex;
   align-content: center;
-  
- }
- 
- .logo_adjust{
-  height: 50px;
+}
 
- }
+.logo_adjust {
+  height: 80px;
+  max-width: 700px; /* Adjust this width as needed */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
- .nav-menu{
-  display: flex;
+.nav__menu {
+  display: none;
+  flex-direction: column;
   gap: 20px;
-  
- }
+  padding-left: 20px;
+}
 
+.nav__menu.show {
+  display: flex;
+}
+
+/* New styles for responsiveness */
+@media (max-width: 768px) {
+  .nav-container {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 10px;
+  }
+
+  .nav__list {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      align-items: flex-start;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      background-color: midnightblue;
+  }
+
+  .nav__menu-button {
+      display: block;
+      background-color: midnightblue;
+      color: whitesmoke;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      margin: 10px 0;
+      padding: 0px;
+  }
+
+  .nav-container{
+    justify-content: center ;
+    align-items: center;
+  }
+  .nav__logo {
+      overflow-y: auto;
+      padding-top: 0px;
+  }
+
+  .nav__list .nav__link {
+      font-size: medium;
+  }
+}
+
+@media (min-width: 769px) {
+  .nav__menu-button {
+      display: none;
+  }
+
+
+
+  .nav__menu {
+      display: flex;
+  }
+}

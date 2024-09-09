@@ -1,0 +1,74 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body{
+  font-family: 'Rubik', sans-serif;
+  background-image:url(https://images.pexels.com/photos/9176038/pexels-photo-9176038.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load);
+ background-repeat: repeat-y;
+ background-position: center;
+ background-size: 100%;
+
+}
+.main-container{
+  max-height: 400px; /* Adjust this value as needed */
+  overflow-y: auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex; 
+  font-family: 'Outfit', sans-serif;
+  flex-direction: column;
+  /* justify-content: center; /* Align content horizontally */
+  align-items: center;
+  /* height: 35vh;  */
+  width: 80vw; /* Increase the width to make it more visible */
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8.5px);
+  -webkit-backdrop-filter: blur(8.5px);
+  border-radius: 10px;
+  font-size: 1rem; /* Increase the font size for a more prominent heading */
+  color: #001C30;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column; 
+  }
+}
+.main-container h2{
+  padding-top: 20px;
+  color:#074698;
+  font-size: 1.5rem;
+}
+.main-container hr{
+  margin-top: 20px;
+  color:#074698;
+  border: solid 2px;
+  width: 100%;
+}
+.tab{
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+td{
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+table{
+  text-align: center;
+  color:#074698;
+  width: 80vw; 
+  height: 100%;/* Make the table take up the full width of the container */
+  border-collapse: collapse;
+}
+th{
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bolder;
+}

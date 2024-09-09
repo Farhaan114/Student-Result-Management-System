@@ -8,12 +8,18 @@
  margin: 0;
 }
 
-
+main {
+  padding-top: 80px;
+  
+}
 
 body {
- background-color:lightyellow;
  color: var(--text-color);
  font-family: var(--body-font);
+ margin: 0;
+ padding: 0;
+ height: 100%;
+ background-image: url("https://images.pexels.com/photos/9176038/pexels-photo-9176038.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load");
 }
 
 ul {
@@ -63,16 +69,25 @@ td{
     align-items: center;
 }
 
-.formContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 500px;
-    height: auto; 
-    padding: 20px;
-    border: 5px solid rgb(24, 24, 185);
-    border-radius: 5px;
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+.form-container form {
+  width: 100%;
+}
+
 
 .formContainer label{
     margin-top: 20px;
@@ -112,9 +127,10 @@ td{
     margin-top: 50px;
     font-size: 20px;
     font-family: "Montserrat";
-    width: 300px;
     height: 80px;
     border-radius: 10px;
+    
+    margin-bottom: 10px;
 
     box-shadow: rgba(99, 99, 99, 0.2) 0px, 2px, 8px, 0px;
 }
@@ -123,18 +139,21 @@ td{
     background-color: transparent;
     width: 300px;
     height: 50px;
-    border: 1px solid #f1f1f1;
+    box-shadow: #aab6c4;
+    text-shadow: #000080;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
   }
   
   /* This container is needed to position the front and back side */
   .flip-box-inner {
     position: relative;
+    justify-content: center;
     width: 100%;
     height: 100%;
     text-align: center;
     transition: transform 0.2s;
     transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   /* Do an horizontal flip when you move the mouse over the flip box container */
@@ -145,8 +164,11 @@ td{
   /* Position the front and back side */
   .flip-box-front, .flip-box-back {
     position: absolute;
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
+    border-radius: 5px;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
   }
@@ -161,22 +183,28 @@ td{
   
   /* Style the back side */
   .flip-box-back {
-    background-color: rgb(212, 98, 117);
+    background-color: rgb(226, 65, 6);
     color: white;
+    align-items: center;
     transform: rotateX(180deg);
   }
 
-.exams{
-    float: left;
-    width: 33.3%;
-}
+
 
   
-.listofexams::after{
+.listofexams{
     content: "";
-    display: table;
+    display: grid;
+    flex-direction: column;
+    grid-template-columns: 1fr 1fr 1fr;
     clear: both;
+    padding-left: 80px;
+
+    border-radius: 5px;
+    justify-content: center;
 }
+
+
 @media screen and (max-width: 600px) {
     .column {
       width: 100%;
@@ -210,3 +238,603 @@ td{
 .add-exam-btn:active {
     background-color: black; /* Even darker shade on active */
   }
+
+
+.std-details-box {
+    font-family: "Montserrat";
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align text to the left */
+    margin: 0 auto; /* Center the box horizontally */
+    width: fit-content; /* Fit the width of the content */
+}
+
+/* Center the content inside the box */
+.std-details {
+    margin: 0; /* Remove default margin */
+    padding: 5px 0; /* Add some padding for spacing */
+}
+
+/* Container for tiles */
+.class-tiles {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* Space between tiles */
+  margin-top: 20px; /* Space above tiles */
+
+}
+
+/* Individual tile */
+.class-tile {
+  background-color: midnightblue; /* Background color */
+  color: white; /* Text color */
+  padding: 20px; /* Space inside tile */
+  border-radius: 8px; /* Rounded corners */
+  text-align: center; /* Center text */
+  width: 100px; /* Tile width */
+  height: 100px; /* Tile height */
+  display: flex; /* Flexbox for centering content */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  font-size: 16px; /* Text size */
+  font-family: 'Montserrat', sans-serif; /* Font style */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+/* Hover effect for tiles */
+.class-tile:hover {
+  transform: translateY(-5px); /* Lift tile on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+}
+
+/* Add this to your CSS file */
+.modal {
+  position: absolute;
+  font-family: "Montserrat";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; /* Adjust the width as needed */
+  max-width: 800px; /* Maximum width */
+  max-height: 80%; /* Maximum height to fit within the viewport */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(202, 180, 180, 0.1);
+  overflow: hidden;
+  opacity: 0; /* Start hidden */
+  visibility: hidden; /* Start hidden */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+
+}
+.modal.open {
+  opacity: 1; /* Fully visible */
+  visibility: visible; /* Make visible */
+}
+
+.modal-content {
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px); /* Glass effect */
+  
+}
+
+.close-modal-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  
+}
+
+/* delete exam page*/
+.delete-exam-container {
+  display: flex;
+  height: 80vh;
+  font-family: "Montserrat";
+}
+/* Container to hold both halves side by side */
+.delete-student-container {
+  display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-family: "Montserrat";
+}
+
+/* Left and right half styling */
+.left-half, .right-half {
+  flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Center the content within the left half */
+.left-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: max-content;
+}
+
+/* Make the right half also a column layout */
+.right-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Input field styling */
+.medium-input {
+  width: 300px; /* Adjust this to your desired size */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Scrollable table styling */
+.scrollable-table {
+  height: 80%;
+  width: 90%;
+  border: 0px solid #992d2d;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Montserrat";
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  border: 0px solid rgba(0, 0, 255, 0.5); /* Blue border with transparency */
+  backdrop-filter: blur(10px); /* Glass effect */
+}
+
+tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+td, th {
+  text-align: left;
+  padding: 8px;
+}
+
+/* Caution message styling */
+.caution-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; /* Ensures the message is vertically centered */
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  border: 0px solid rgba(0, 0, 255, 0.5); /* Blue border with transparency */
+  backdrop-filter: blur(10px); /* Glass effect */
+  color: #000080; /* Dark blue text color for contrast */
+  font-family: "Montserrat", sans-serif; /* Consistent font with the rest of the page */
+  font-size: 1.2em; /* Slightly larger font size for emphasis */
+  font-weight: bold; /* Bold text to make it stand out */
+  text-align: center; /* Center the text inside the div */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners for a modern look */
+  margin: 20px; /* Margin to ensure the message doesn't touch the edges of the screen */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+  width: 800px;
+}
+
+/* Scrollable table container styling */
+.scrollable-table-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+/* Box container styling */
+.box {
+  max-height: 500px; /* Set a maximum height to control when scrolling starts */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 30px; /* Center the box horizontally */
+  margin-left: 30px;
+  padding: 10px;
+  border: 0px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  border: 0px solid rgba(0, 0, 255, 0.5); /* Blue border with transparency */
+  backdrop-filter: blur(10px); /* Glass effect */}
+
+/* Wrapper for dropdowns */
+.dropdown-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Make the dropdown container full width */
+  max-width: 300px; /* Ensure dropdowns don't get too wide */
+}
+
+/* Label styling */
+.dropdown-container label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Dropdown styling */
+.dropdown {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Focused dropdown styling */
+.dropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.Box-Container{
+  display: flex;
+}
+@media (max-width: 768px){
+  .Box-Container{
+    justify-content: center;
+  }
+}
+  
+.dashboard-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  border: 0px solid rgba(0, 0, 255, 0.5); /* Blue border with transparency */
+  backdrop-filter: blur(10px); /* Glass effect */
+  margin-top: 30px;
+  margin-left:30px;
+  margin-right:30px;
+  border: thin;
+  border-radius: 20px;
+}
+
+.dashboard-summary {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.summary-box {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
+  backdrop-filter: blur(30px);
+
+}
+
+
+.yearly-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;  
+  justify-content: center;
+  align-items: center;
+}
+
+.year-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: max-content;
+}
+
+
+.year-box h4 {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-summary {
+      flex-direction: column;
+  }
+
+  .summary-box {
+      margin-bottom: 20px;
+      width: 100%;
+  }
+}
+
+  .Box-Container{
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  /*AdminHome.css*/
+
+
+
+
+
+
+
+.login{
+  display: flex;
+  justify-content: end; 
+  vertical-align: middle;
+  margin-right: 30px;
+}
+
+.login-button{
+  color: whitesmoke;
+font-weight:600;
+transition: color 0.2s;
+}
+
+.login-form{
+  display: grid;
+flex-direction: column;
+gap: 10px;
+justify-content: center;
+padding-top: 20px;
+
+}
+
+.login-fields{
+  width:min-content;
+  padding: 5px;
+border-radius: 4px;
+border: 1px solid #ccc;
+display: flex;
+
+}
+
+.LOgin-button{
+  padding: 5px 10px;
+  font-family: "Montserrat";
+  height: 5vh;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer; 
+  width: max-content;
+  font-weight: bold;
+
+}
+
+.LOgin-button:hover{
+  background-color: orangered;
+  box-shadow: grey;
+  color: black;
+}
+.buttonbox{
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  height: max-content;
+  gap: 20px;
+
+}
+
+
+
+/*  */
+
+.title1{
+  display: flex;
+  justify-content: center;
+  font-family: "Montserrat";
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+
+
+.std-list {
+  display: grid;
+  flex-direction: column;
+  margin: auto;
+
+  font-size: 20px;
+  gap: 30px;
+  align-content: center;
+  
+
+}
+
+.det-list{
+  display:grid;
+  flex-direction: column;
+  
+}
+
+.std-sub{
+  display: flex;
+  justify-content: center;
+}
+
+.std-sub-button{
+  display: inline-block;
+  margin: auto;
+  color: white;
+  margin-top: 40px;
+  align-items: flex-end;
+  background-color: blue;
+  font-family: "Montserrat";
+  font-weight: 600;
+  text-align: center;
+  height: 50px;
+  width: 100px;
+  border-radius: 0.7rem;
+
+}
+
+.std-sub-button:hover {
+  background-color: #aab6c4; /* Darker shade of blue on hover */
+  color:black;
+  box-shadow:rgb(189, 17, 17);
+}
+
+.std-sub-button:active {
+  background-color: black; /* Even darker shade on active */
+}
+
+.back-button{
+  display: inline-block;
+  margin-top: 0px;
+  margin-left: 30px;
+  color: white;
+  margin-top: 40px;
+  margin-left: 60px;
+  align-items: flex-end;
+  background-color: orangered;
+  font-family: "Montserrat";
+  font-weight: 600;
+  text-align: center;
+  height: 50px;
+  width: 100px;
+  border-radius: 0.7rem;
+}
+
+.back-button:hover{
+  background-color: #aab6c4; /* Darker shade of blue on hover */
+  color:black;
+  box-shadow:rgb(189, 17, 17);
+}
+.back-button:active{
+  background-color: black;
+}
+
+.add-std{
+  display: flex;
+  justify-content: end; 
+  vertical-align: middle;
+  margin-right: 30px;
+
+}
+.add-std-btn{
+
+  font-size: 16px;
+  color: white;
+  margin-top: 40px;
+  align-items: flex-end;
+  background-color: blue;
+  font-family: "Montserrat";
+  font-weight: 600;
+  text-align: center;
+  height: 50px;
+  width: 200px;
+  border-radius: 0.7rem;
+  
+
+
+
+}
+.add-std-btn:hover {
+  background-color: #aab6c4; /* Darker shade of blue on hover */
+  color:black;
+  box-shadow:rgb(189, 17, 17);
+}
+
+.add-std-btn:active {
+  background-color: black; /* Even darker shade on active */
+}
+
+.std-list{
+  display: flex;
+  align-items: center;
+  
+}
+
+.top-bar{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  justify-content: center;
+  font-weight: bold;
+  border-top: 10px black;
+  padding-left: 20px;
+}
+
+.Student{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.remove{
+  background-color: pink;
+  color: black;
+  font-family: "Montserrat"; 
+  border-radius: "5px";
+  width: "120px";
+
+}
+
+.form-container {
+  display: flex;
+  height: 50vh;
+  background: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  border: 0px solid rgba(0, 0, 255, 0.5); /* Blue border with transparency */
+  backdrop-filter: blur(10px); /* Glass effect */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.std-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  margin: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: medium;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 0 10px;
+  box-shadow: 0 0 0 0 0 0 0 0 20px;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 5px;
+  border-radius: 10px;
+  border: 1px solid 1px;
+}
+
+input[type="number"],
+input[type="text"] {
+width: 100%;
+padding: 10px; /* Input field styling */
+margin-bottom: 10px;
+border: 1px solid #ccc; /* Input field styling */
+border-radius: 5px; /* Rounded corners */
+}

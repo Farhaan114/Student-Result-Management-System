@@ -1,51 +1,88 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 
 export default function ResultsPage(){
 
     const navigate = useNavigate();
-    const [rollno, setrollno] = useState('');
+    const [ID, setID] = useState('');
 
     const handleChange1 = (e) =>{
-        const {value} = e.target;
-        setrollno(value);
+        const { value } = e.target;
+
+        // Ensure that only a 3-digit number is allowed
+        if (/^\d{0,3}$/.test(value)) {
+            setID(value);
+        }
     }
 
 
     const handleGetResult = (e) =>{
         e.preventDefault();
-        console.log('Submitting', { rollno });
+        console.log('Submitting', { ID });
 
-        setrollno('');
-        navigate("/GetResult");
+        // Check if ID is not entered or not a valid 3-digit number
+        if (!ID) {
+            toast.error("Please enter your ID to view results!");
+        } else if (ID.length !== 3) {
+            toast.error("ID must be a 3-digit number!");
+        } else {
+            navigate(`/GetResult/${ID}`);
+        }
     }
-
-
 
     return (
         <div>
             <header className="header">
                 <div className="nav-container">
-                <h1 className="nav__logo">STUDENT RESULTS MANAGEMENT PORTAL</h1> 
-                
-                <div className="login">
-                    <NavLink to="/Login" className="login-button">LOGIN</NavLink>
+                    <h1 className="nav__logo">STUDENT RESULTS MANAGEMENT PORTAL</h1> 
+                    
+                    <div className="nav__list">
+                        <NavLink to="/Login" className="nav__link">LOGIN</NavLink>
+                    </div>
                 </div>
-                
-                </div>
-                
             </header>
-            <h1 className="title">Results Page</h1>
-            <h3 style={{fontFamily: "sans-serif", display: "grid", paddingBottom: "20px"}} htmlFor="rollno">ENTER YOUR ROLL NUMBER BELOW TO VIEW YOUR RESULT</h3>
+            
+            <h1 className="title1">Results Page</h1>
+            
+            <div className="Box-Container">
+                <div className="caution-message" style={{flexDirection: "column", height: "40vh"}}>
+                    <p>ENTER YOUR ID NUMBER BELOW TO VIEW YOUR RESULT</p>
+                    
+                    <form className="login-form">
+                        <input 
+                            placeholder="Enter your 3-digit ID" 
+                            className="login-fields" 
+                            type="text" 
+                            id="ID" 
+                            value={ID} 
+                            onChange={handleChange1} 
+                            autoComplete="off" 
+                            required
+                            pattern="\d{3}" 
+                            maxLength="3"
+                        />
+                        
+                        <div className="wrapper">
+                            <button className="LOgin-button" type="submit" onClick={handleGetResult}>GET RESULT</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-            <form className="login-form">
-                
-                <input placeholder="ROLL NO." className="login-fields" type="text" id="rollno" onChange={handleChange1} autoComplete="off" required/>
-
-                <button className="LOgin-button" type="submit" onClick={handleGetResult} >GET RESULT</button>
-            </form>
+            <ToastContainer
+                position="top-center"
+                autoClose={1900}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                    theme="light"
+            />
         </div>
-    )
-    
+    );
 }
