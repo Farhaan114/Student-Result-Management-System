@@ -7,31 +7,60 @@ This project is a **Student Results Management System** built using **React.js**
 ## Features
 
 ### Dashboard
-- A landing page for the admin to quickly see stats on exams, students and pass %.
-  ![Dashboard](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ADMINHOME.png)
-
-### Exam Management
-- Add new exams with details like course code, exam name, year, and pass/fail criteria.
-- Delete exams and view existing ones in a scrollable table.
-- Filter exams based on `course_code` and `exam_name`.
-
-### Student Management
-- View student details (ID, name, class, year, email).
-- Display distinct class numbers based on selected years and list students per class.
-- Perform regex validation on student details (ID, class number, year, etc.).
-
-### Marks Management
-- Input and update marks for students.
-- Calculate the highest, lowest, and average marks for any exam.
-- Perform validations to prevent negative values (except -1 for absentees).
-- Edit and update existing marks for individual students.
-
-### Dashboard
-- Display an overview of the system's data including:
+- A landing page for the admin to quickly see system data:
   - Total number of students and exams.
   - Pass/fail statistics for each year.
   - Pass percentage calculation.
-  
+
+  ![Dashboard](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ADMINHOME.png)
+
+### Exam Management
+---
+![ManageExams](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ManageExams.png)
+
+- Add new exams with details like course code, exam name, year, and pass/fail criteria.
+- Form Validation is also done with dynamic notifications.
+- ![Add an exam](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/ExamCreated.png)
+- ![Form validation](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/form%20validation.png)
+
+
+- Delete exams and view existing ones in a scrollable table.
+- ![Delete an exam](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Delete%20exam.png)
+
+- Filter exams based on `course_code` and `exam_name`.
+- ![Filter courses](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/search%20by%20course_code.png)
+
+
+### Student Details
+- Display distinct class numbers based on selected years and list students per class.
+- ![Display classes in each year](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/View%20classes%20in%20years.png)
+
+- View student details (ID, name, class, year, email).
+- ![Class Details](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Class%20Details.png)
+
+
+### Marks Management
+- Input and update marks for students.
+- Display the highest, lowest, and average marks for any exam.
+- Perform validations to prevent negative values (except -1 for absentees).
+- Edit and update existing marks for individual students.
+- ![Search by ID](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/search%20for%20id.png)
+- ![Enter Marks](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/enter%20marks.png)
+
+
+### Result Retrieval by the Students
+-Enter student ID
+- ![Student landing page](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Students%20Landing%20Page.png)
+
+-Results display
+- ![Result Retrieval](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Result%20retireval.png)
+
+
+### Screen Responsiveness
+- Screen Responsiveness done for different Resolutions
+  ![Responsiveness](https://github.com/Farhaan114/Student-Result-Management-System/blob/master/screenshots/Responsiveness.png)
+
+
 ### Data Handling
 - Relational database schema designed with foreign keys and cascading deletes to maintain data integrity.
 - Backend API routes to retrieve student and exam details, manage marks, and retrieve pass/fail statistics.
