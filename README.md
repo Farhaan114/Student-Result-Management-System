@@ -39,20 +39,6 @@ This project is a **Student Results Management System** built using **React.js**
 - **Backend**: Powered by Express.js, with endpoints handling student data, exam data, and statistical queries.
 - **Database**: MySQL database with tables for students, exams, and marks, ensuring referential integrity using foreign keys.
 
-## Key Queries
-
-- Year-wise pass/fail statistics:
-```sql
-SELECT 
-    sd.year,
-    SUM(CASE WHEN m.marks >= e.min_marks THEN 1 ELSE 0 END) AS passCount,
-    SUM(CASE WHEN m.marks < e.min_marks AND m.marks != -1 THEN 1 ELSE 0 END) AS failCount
-FROM Marks m
-JOIN Exams e ON m.course_code = e.course_code AND m.exam_name = e.exam_name
-JOIN Student_details sd ON m.ID = sd.ID
-GROUP BY sd.year
-ORDER BY sd.year;
-```
 
 ## Technologies Used
 
@@ -72,17 +58,17 @@ ORDER BY sd.year;
 2. **Install dependencies**:
    - For backend:
      ```bash
-     cd backend
+     cd SERVER
      npm install
      ```
    - For frontend:
      ```bash
-     cd frontend
+     cd CLIENT
      npm install
      ```
 
 3. **Set up MySQL database**:
-   - Create a database and import the provided schema in the `/db/schema.sql` file.
+   - Create a database and import the provided schema in the `/SERVER/schema.sql` file.
 
 4. **Start the server**:
    ```bash
