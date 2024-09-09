@@ -1,6 +1,6 @@
 ---
 
-# Student Results Management System
+# Student Results Management System <img src="https://github.com/Farhaan114/Student-Result-Management-System/blob/master/CLIENT/src/components/exam-results.png" align="right" width="50">
 
 This project is a **Student Results Management System** built using **React.js** for the frontend and **Express.js** with a **MySQL** database for the backend. The system allows administrators to manage exams, student details and marks, providing an efficient way to track academic performance.
 
