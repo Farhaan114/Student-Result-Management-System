@@ -2,7 +2,7 @@
 
 # Student Results Management System <img src="https://github.com/Farhaan114/Student-Result-Management-System/blob/master/CLIENT/src/components/exam-results.png" align="right" width="50">
 
-This project is a **Student Results Management System** built using **React.js** for the frontend and **Express.js** with a **MySQL** database for the backend. The system allows administrators to manage exams, student details and marks, providing an efficient way to track academic performance.
+This project is a **Student Results Management System** built using **React.js** for the frontend and **Express.js** with a **PostgreSQL** database for the backend. The system allows administrators to manage exams, student details and marks, providing an efficient way to track academic performance.
 
 ## Features
 
@@ -74,14 +74,14 @@ This project is a **Student Results Management System** built using **React.js**
 
 - **Frontend**: Built using React.js. Features reusable components, React Router, hooks (`useEffect`, `useState`), and CSS for styling.
 - **Backend**: Powered by Express.js, with endpoints handling student data, exam data, and statistical queries.
-- **Database**: MySQL database with tables for students, exams, and marks, ensuring referential integrity using foreign keys.
+- **Database**: PostgreSQL database with tables for students, exams, and marks, ensuring referential integrity using foreign keys.
 
 
 ## Technologies Used
 
 - **Frontend**: React.js, CSS, Axios 
-- **Backend**: Node.js, Express.js, MySQL
-- **Database**: MySQL with relational schema
+- **Backend**: Node.js, Express.js, PostgreSQL
+- **Database**: PostgreSQL with relational schema and SEQUELIZE ORM
 - **Version Control**: Git & GitHub
 
 ## How to Run
@@ -104,7 +104,7 @@ This project is a **Student Results Management System** built using **React.js**
      npm install
      ```
 
-3. **Set up MySQL database**:
+3. **Set up PostgreSQL database**:
    - Create a database and import the provided schema in the `/SERVER/schema.sql` file.
 
 4. **Start the server**:
