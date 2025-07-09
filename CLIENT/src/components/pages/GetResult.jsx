@@ -86,9 +86,9 @@ export default function GetResult() {
                 <div className="box">
                     <div className="std-details-box">
                         <h4 className="std-details">ID: {ID}</h4>
-                        <h4 className="std-details">Name: {studentDetails.Name}</h4>
-                        <h4 className="std-details">Year: {studentDetails.Year}</h4>
-                        <h4 className="std-details">Email: {studentDetails.Email}</h4>
+                        <h4 className="std-details">Name: {studentDetails.name}</h4>
+                        <h4 className="std-details">Year: {studentDetails.year}</h4>
+                        <h4 className="std-details">Email: {studentDetails.email}</h4>
                         <h4 className="std-details">ClassNo: {studentDetails.classNo}</h4>
                     </div>
                 </div>

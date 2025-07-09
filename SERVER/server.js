@@ -1,191 +1,150 @@
 const express = require("express");
 const cors = require("cors");
-const mysql2 = require("mysql2");
-const router = express.Router();
-const util = require("util");
 const bodyParser = require("body-parser");
-
 const app = express();
-app.use(bodyParser.json()); // for MIddlewares 
-
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
+// Import Sequelize models
+const db = require("./models");
+const { Student, Exam, Mark, sequelize } = db;
 
-
-
-const db = mysql2.createPool({
-    host: "localhost",
-    user: "root",
-    password: "sudopw",
-    database: "srms"
+// SHOWS ALL THE EXAMS IN A LIST
+app.get("/showexams", async (req, res) => {
+    try {
+        const exams = await Exam.findAll({
+            attributes: ["exam_name", "course_code", "year"]
+        });
+        res.json(exams);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An Error occurred");
+    }
 });
 
-db.query = util.promisify(db.query).bind(db);
-
-
-
-// SHOWS ALL THE EXAMS IN A LIST - works -done 
-app.get("/showexams", (req, res) => {
-    const select = "SELECT exam_name, course_code, year from EXAMS";
-    db.query(select, (err, result) => {
-        if(err){
-            console.error(err);
-            res.status(500).send("An Error occurred");
-        }
-        else{
-            const exams = result.map(exam => ({
-                course_code: exam.course_code,
-                exam_name: exam.exam_name,
-                year: exam.year
-            }));
-            res.json(exams);
-        }
-    })
-})
-
-// SHOWS NAME OF AN EXAM FROM A LIST - works -done
-app.get("/showexamname/:course_code", (req, res) => {
-    
-    const course_code = req.params.course_code;
-
-    const select = "SELECT exam_name from EXAMS WHERE course_code = '"+`${course_code}`+"' ;";
-    db.query(select, (err, result) => {
-        if(err){
-            console.error(err);
-            res.status(500).send("An Error occurred");
-        }
-        else{
-            if (result.length > 0) {
-                const examname = result[0].exam_name;
-                res.json(examname);
-            } else {
-                res.status(404).send("Exam name not found");
-            }
-        }
-    });
-});
-
-//SHOW THE MAX MARKS AND MIN MARKS OF A PARTICULAR EXAM  -works -done
-app.get("/showExamMarks/:course_code", (req, res) => {
-    const course_code = req.params.course_code;
-
-    const select = "SELECT max_marks, min_marks FROM EXAMS WHERE course_code = ?";
-    db.query(select, [course_code], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send("An error occurred");
+// SHOWS NAME OF AN EXAM FROM A LIST
+app.get("/showexamname/:course_code", async (req, res) => {
+    try {
+        const { course_code } = req.params;
+        const exam = await Exam.findOne({
+            where: { course_code },
+            attributes: ["exam_name"]
+        });
+        if (exam) {
+            res.json(exam.exam_name);
         } else {
-            if (result.length > 0) {
-                const { max_marks, min_marks } = result[0];
-                res.json({ max_marks, min_marks });
-            } else {
-                res.status(404).send("Marks data not found");
-            }
+            res.status(404).send("Exam name not found");
         }
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An Error occurred");
+    }
 });
 
-
-// shows all the students who have written a particular exam. - WORKS -done
-app.get("/showOneExam/:course_code", (req, res) => {
-    const CourseCode = req.params.course_code;
-    console.log(`Received course code: ${CourseCode}`);
-
-    console.log(`${CourseCode}`);
-    
-    const exam = "SELECT s.ID, s.name, s.email, s.year, m.marks FROM Student_details s JOIN Marks m ON s.ID = m.ID WHERE m.course_code = '"+`${CourseCode}`+"';";
-
-    db.query(exam, (err, result) => {
-        if (err) {
-            console.error("Database error:", err);
-            res.status(500).send({ message: "Database error occurred" });
+// SHOW THE MAX MARKS AND MIN MARKS OF A PARTICULAR EXAM
+app.get("/showExamMarks/:course_code", async (req, res) => {
+    try {
+        const { course_code } = req.params;
+        const exam = await Exam.findOne({
+            where: { course_code },
+            attributes: ["max_marks", "min_marks"]
+        });
+        if (exam) {
+            res.json({ max_marks: exam.max_marks, min_marks: exam.min_marks });
         } else {
-
-            console.log("result:", result);
-            const exam = result.map(exam => ({
-                ID: exam.ID,
-                Name: exam.name,
-                Year: exam.year,
-                Marks: exam.marks
-            })); 
-            res.json(exam);
+            res.status(404).send("Marks data not found");
         }
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred");
+    }
 });
 
+// Shows all the students who have written a particular exam
+app.get("/showOneExam/:course_code", async (req, res) => {
+    try {
+        const { course_code } = req.params;
+        // 1. Find the exam to get the year
+        const exam = await Exam.findOne({ where: { course_code } });
+        if (!exam) {
+            return res.status(404).json({ message: "Exam not found" });
+        }
+        // 2. Get all students in that year, left join with Mark for this exam
+        const students = await Student.findAll({
+            where: { year: exam.year },
+            attributes: ["ID", "name", "email", "year"],
+            include: [{
+                model: Mark,
+                required: false,
+                where: {
+                    course_code: course_code,
+                    exam_name: exam.exam_name
+                },
+                attributes: ["marks"]
+            }]
+        });
+        // 3. Format the result
+        const result = students.map(s => ({
+            ID: s.ID,
+            Name: s.name,
+            Year: s.year,
+            Marks: s.Marks[0] ? s.Marks[0].marks : null // or "N/A"
+        }));
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: "Database error occurred" });
+    }
+});
 
-
-
-// to create an exam with its details - WORKS -done
+// Create an exam with its details
 app.post('/insertExam', async (req, res) => {
     try {
-        const { course_code, exam_name, year, max_marks, min_marks } = req.body;
-
-        // Validation checks for max_marks and min_marks
-        if (min_marks > max_marks) {
-            console.log("check2");
+        let { course_code, exam_name, year, max_marks, min_marks } = req.body;
+        // Coerce to numbers
+        const min = Number(min_marks);
+        const max = Number(max_marks);
+        const yr = Number(year);
+        if (isNaN(min) || isNaN(max) || isNaN(yr)) {
+            return res.status(400).send({ message: 'Invalid number input.' });
+        }
+        if (min > max) {
             return res.status(400).send({ message: 'Minimum marks cannot be greater than maximum marks.' });
         }
-
-        // Check if the exam already exists
-        const checkQuery = `
-            SELECT * FROM Exams WHERE course_code = ? AND exam_name = ? AND year = ?
-        `;
-        const checkParams = [course_code, exam_name, year];
-
-        const [existingExam] = await db.promise().query(checkQuery, checkParams);
-
-        if (existingExam.length > 0) {
-            // Exam already exists
+        const [exam, created] = await Exam.findOrCreate({
+            where: { course_code, exam_name, year: yr },
+            defaults: { max_marks: max, min_marks: min }
+        });
+        if (!created) {
             return res.status(409).send({ message: 'Exam already exists.' });
         }
-
-        // Insert the exam if it doesn't exist
-        const insertQuery = `
-            INSERT INTO Exams (course_code, exam_name, year, max_marks, min_marks) VALUES (?, ?, ?, ?, ?)
-        `;
-        const insertParams = [course_code, exam_name, year, max_marks, min_marks];
-
-        const [result] = await db.promise().query(insertQuery, insertParams);
-
-        res.status(200).send({ message: 'Exam inserted successfully.', affectedRows: result.affectedRows });
+        res.status(200).send({ message: 'Exam inserted successfully.' });
     } catch (err) {
         console.error('Database Error:', err);
         res.status(500).send({ message: 'An error occurred.', error: err.message });
     }
 });
 
-
-// For updating/pre-filling the Marks table after each new exam insert. -works -done 
+// For updating/pre-filling the Marks table after each new exam insert
 app.post('/insertIntoMarks', async (req, res) => {
     try {
-        const insertMarksQuery = `
-            INSERT INTO Marks (ID, course_code, exam_name, marks)
-            SELECT 
-                s.ID, 
-                e.course_code, 
-                e.exam_name, 
-                NULL AS marks
-            FROM 
-                Student_details s
-            JOIN 
-                Exams e ON s.year = e.year
-            WHERE 
-                NOT EXISTS (
-                    SELECT 1
-                    FROM Marks m
-                    WHERE m.ID = s.ID
-                      AND m.course_code = e.course_code
-                      AND m.exam_name = e.exam_name
-                )
-        `;
-
-        const result = db.query(insertMarksQuery);
-
-        console.log('Inserted initial marks records:', result);
-
+        // For each student in the same year as the exam, create a Mark if not exists
+        const exams = await Exam.findAll();
+        for (const exam of exams) {
+            const students = await Student.findAll({ where: { year: exam.year } });
+            for (const student of students) {
+                await Mark.findOrCreate({
+                    where: {
+                        ID: student.ID,
+                        course_code: exam.course_code,
+                        exam_name: exam.exam_name
+                    },
+                    defaults: { marks: null }
+                });
+            }
+        }
         res.send({ message: 'Initial marks records inserted successfully.' });
     } catch (err) {
         console.error('Error inserting initial marks:', err);
@@ -193,297 +152,210 @@ app.post('/insertIntoMarks', async (req, res) => {
     }
 });
 
-
-
-// Enter/Update Marks for a student in one exam -WORKS -done
+// Enter/Update Marks for a student in one exam
 app.put('/updateStudentMarks', async (req, res) => {
     try {
         const { studentId, courseCode, examName, marks } = req.body;
-
-        if (!studentId || !courseCode || !examName || !marks) {
+        if (!studentId || !courseCode || !examName || marks === undefined) {
             return res.status(400).send({ message: 'All fields are required.' });
         }
-
-        const updateQuery = `
-            INSERT INTO Marks (ID, course_code, exam_name, marks)
-            VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE 
-                marks = VALUES(marks)
-        `;
-
-        const params = [studentId, courseCode, examName, marks];
-
-        const result = db.query(updateQuery, params);
-
-        if (result.affectedRows === 0) {
-            return res.send({ message: 'No changes made. Student ID and course code combination does not exist.' });
+        const [mark, created] = await Mark.findOrCreate({
+            where: { ID: studentId, course_code: courseCode, exam_name: examName },
+            defaults: { marks }
+        });
+        if (!created) {
+            mark.marks = marks;
+            await mark.save();
         }
-
-        res.send({ message: 'Student marks updated successfully.', affectedRows: result.affectedRows });
+        res.send({ message: 'Student marks updated successfully.' });
     } catch (err) {
         console.error('Error updating student marks:', err);
         res.status(500).send({ message: 'Failed to update student marks.', error: err.message });
     }
 });
 
-
-// Retrieve results for one student upon entering the ID number. -WORKS -done
+// Retrieve results for one student upon entering the ID number
 app.get('/getStudentMarks/:ID', async (req, res) => {
-    
+    try {
         const { ID } = req.params;
-
-        console.log(`Fetching marks for student ${ID}`);
-
-        const query = `
-            SELECT course_code, exam_name, marks
-            FROM Marks
-            WHERE ID = ${ID}
-        `;
-
-        db.query(query, (err,result) => {
-            if(err){
-                console.error(err);
-                res.send("an error occurred.");
-            }
-            else{
-                const transformedResult = result.map(mark => ({
-                    CourseCode: mark.course_code,
-                    ExamName: mark.exam_name,
-                    Marks: mark.marks ? mark.marks : "N/A" // Handling cases where marks might be null
-                }));
-                res.send(transformedResult);
-            }
+        const marks = await Mark.findAll({
+            where: { ID },
+            attributes: ["course_code", "exam_name", "marks"]
         });
+        const transformedResult = marks.map(mark => ({
+            CourseCode: mark.course_code,
+            ExamName: mark.exam_name,
+            Marks: mark.marks !== null ? mark.marks : "N/A"
+        }));
+        res.send(transformedResult);
+    } catch (err) {
+        console.error(err);
+        res.send("an error occurred.");
+    }
 });
 
-
-// Retrieve student details - WORKS -done
+// Retrieve student details
 app.get('/getStudentDetails/:ID', async (req, res) => {
-
-    const { ID } = req.params;
-
-    console.log(`Fetching student details for ${ID}`);
-
-
-    const query = `
-        SELECT ID, classNo, name, email, year
-        FROM Student_details
-        WHERE ID = ?;
-    `;
-
-    db.query(query, [ID], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send("An error occurred.");
-        } else {
-            const transformedResult = result.map(studentDetails => ({
-                ID: studentDetails.ID,
-                classNo: studentDetails.classNo,
-                Name: studentDetails.name,
-                Email: studentDetails.email,
-                Year: studentDetails.year
-            }));
-            res.send(transformedResult);
-        }
-    });
-});
-
-//for getting the number of years -WORKS -done
-app.get('/getYears', (req, res) => {
-    const query = `
-        SELECT DISTINCT CONCAT('year ', year) AS year_name 
-        FROM student_details 
-        ORDER BY year_name 
-        LIMIT 0, 1000;
-    `;
-
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            return res.status(500).send('An error occurred while fetching the years.');
-        }
-        res.json(results);
-    });
-});
-
-// for getting the distinct classes -works -done
-app.get('/getClassNo/:year', (req, res) => {
-
-    const yearParam = req.params.year;
-    const year = yearParam.replace('year ', ''); // Removing 'year '
-
-    if (isNaN(year) || year.trim() === '') {
-        return res.status(400).json({ error: 'Invalid year parameter' });
+    try {
+        const { ID } = req.params;
+        const student = await Student.findOne({
+            where: { ID },
+            attributes: ["ID", "classNo", "name", "email", "year"]
+        });
+        if (!student) return res.status(404).send([]);
+        res.send([student]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred.");
     }
+});
 
-    const query = 'SELECT DISTINCT classNo FROM student_details WHERE year = ?';
-    
-    db.query(query, [year], (error, results) => {
-      if (error) {
+// For getting the number of years
+app.get('/getYears', async (req, res) => {
+    try {
+        const years = await Student.findAll({
+            attributes: [[sequelize.literal("CONCAT('year ', year)"), 'year_name']],
+            group: ['year'],
+            order: [[sequelize.literal('year_name'), 'ASC']]
+        });
+        res.json(years);
+    } catch (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('An error occurred while fetching the years.');
+    }
+});
+
+// For getting the distinct classes
+app.get('/getClassNo/:year', async (req, res) => {
+    try {
+        const yearParam = req.params.year;
+        const year = yearParam.replace('year ', '');
+        if (isNaN(year) || year.trim() === '') {
+            return res.status(400).json({ error: 'Invalid year parameter' });
+        }
+        const classes = await Student.findAll({
+            where: { year },
+            attributes: [[sequelize.col('classNo'), 'classNo']],
+            group: ['classNo']
+        });
+        res.json(classes);
+    } catch (error) {
         console.error('Database query error: ', error);
-        return res.status(500).json({ error: 'An error occurred while fetching class numbers' });
-      }
-      
-      res.json(results);
-    });
-  });
-
-
-// get the students of a particular class in a particular year -WORKS -done
-app.get('/getStudents/:classNo/:year', (req, res) => {
-    const classNo = parseInt(req.params.classNo, 10);
-    const yearParam = req.params.year;
-    const year = yearParam.replace('year ', ''); // Removing 'year '
-    
-    if (isNaN(year) || year.trim() === '') {
-        return res.status(400).json({ error: 'Invalid year parameter' });
+        res.status(500).json({ error: 'An error occurred while fetching class numbers' });
     }
-
-    if (isNaN(classNo) || isNaN(year)) {
-        return res.status(400).json({ error: 'Invalid parameters' });
-    }
-
-    const query = `
-        SELECT ID, classNo, name, email, year
-        FROM Student_details
-        WHERE classNo = ? AND year = ?
-    `;
-
-    db.query(query, [classNo, year], (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            return res.status(500).json({ error: 'Database query error' });
-        }
-        res.json(results);
-    });
 });
 
-// delete an exam - WORKS -done
-app.delete('/deleteExam/:course_code/:exam_name', (req, res) => {
-    const { course_code, exam_name } = req.params;
-    const deleteQuery = 'DELETE FROM Exams WHERE course_code = ? AND exam_name = ?';
-
-    db.query(deleteQuery, [course_code, exam_name], (err, result) => {
-        if (err) {
-            console.error('Failed to delete exam:', err);
-            return res.status(500).json({ error: 'Failed to delete exam' });
+// Get the students of a particular class in a particular year
+app.get('/getStudents/:classNo/:year', async (req, res) => {
+    try {
+        const classNo = parseInt(req.params.classNo, 10);
+        const yearParam = req.params.year;
+        const year = yearParam.replace('year ', '');
+        if (isNaN(year) || year.trim() === '' || isNaN(classNo)) {
+            return res.status(400).json({ error: 'Invalid parameters' });
         }
+        const students = await Student.findAll({
+            where: { classNo, year },
+            attributes: ["ID", "classNo", "name", "email", "year"]
+        });
+        res.json(students);
+    } catch (err) {
+        console.error('Error executing query:', err);
+        res.status(500).json({ error: 'Database query error' });
+    }
+});
 
-        if (result.affectedRows === 0) {
+// Delete an exam
+app.delete('/deleteExam/:course_code/:exam_name', async (req, res) => {
+    try {
+        const { course_code, exam_name } = req.params;
+        const result = await Exam.destroy({ where: { course_code, exam_name } });
+        if (result === 0) {
             return res.status(404).json({ message: 'Exam not found' });
         }
-
         res.json({ message: 'Exam deleted successfully' });
-    });
+    } catch (err) {
+        console.error('Failed to delete exam:', err);
+        res.status(500).json({ error: 'Failed to delete exam' });
+    }
 });
 
-
-// !--- ADD STUDENT AND DELETE STUDENT FEATURES HAVE BEEN OMITTED DUE TO THEM NOT BEING APPROPRIATE USECASES FOR THE PROJECT ---!
-// insert a student into the table. -WORKS -done
-app.post('/AddStudent', (req, res) => {
-    const { ID, classNo, name, email, year } = req.body;
-
-    // Validate input
-    if (!ID || !classNo || !name || !email || !year) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
-
-    // Check if the student already exists
-    const checkQuery = 'SELECT * FROM Student_details WHERE ID = ? OR email = ?';
-    const checkValues = [ID, email];
-
-    db.query(checkQuery, checkValues, (err, results) => {
-        if (err) {
-            console.error('Error checking if student exists:', err);
-            return res.status(500).json({ error: 'An error occurred while checking student existence' });
+// Insert a student into the table
+app.post('/AddStudent', async (req, res) => {
+    try {
+        const { ID, classNo, name, email, year } = req.body;
+        if (!ID || !classNo || !name || !email || !year) {
+            return res.status(400).json({ error: 'All fields are required' });
         }
-
-        if (results.length > 0) {
-            // Student already exists
+        const [student, created] = await Student.findOrCreate({
+            where: { ID, email },
+            defaults: { classNo, name, year }
+        });
+        if (!created) {
             return res.status(422).json({ error: 'Student already exists' });
         }
-
-        // Student does not exist, proceed with insertion
-        const insertQuery = 'INSERT INTO Student_details (ID, classNo, name, email, year) VALUES (?, ?, ?, ?, ?)';
-        const insertValues = [ID, classNo, name, email, year];
-
-        db.query(insertQuery, insertValues, (err, result) => {
-            if (err) {
-                console.error('Error inserting data:', err);
-                return res.status(500).json({ error: 'An error occurred while inserting data' });
-            }
-            res.status(201).json({ message: 'Student added successfully', result });
-        });
-    });
+        res.status(201).json({ message: 'Student added successfully', result: student });
+    } catch (err) {
+        console.error('Error inserting data:', err);
+        res.status(500).json({ error: 'An error occurred while inserting data' });
+    }
 });
 
-app.delete('/deleteStudent', (req, res) => {
-    const studentId = req.body.id;
-
-    if (!studentId) {
-        return res.status(400).json({ error: 'Student ID is required' });
-    }
-
-    const deleteQuery = 'DELETE FROM Student_details WHERE ID = ?';
-
-    db.query(deleteQuery, [studentId], (err, result) => {
-        if (err) {
-            console.error('Error deleting student:', err);
-            return res.status(500).json({ error: 'Failed to delete student' });
+// Delete a student
+app.delete('/deleteStudent', async (req, res) => {
+    try {
+        const studentId = req.body.id;
+        if (!studentId) {
+            return res.status(400).json({ error: 'Student ID is required' });
         }
-
-        if (result.affectedRows === 0) {
+        const result = await Student.destroy({ where: { ID: studentId } });
+        if (result === 0) {
             return res.status(404).json({ message: 'Student not found' });
         }
-
         res.status(200).json({ message: 'Student deleted successfully' });
-    });
-});
-// 
-
-// To get the pass/fail percentages for each year 
-app.get('/yearlyPassFailStats', (req, res) => {
-    const query = `
-        SELECT 
-            sd.year,
-            SUM(CASE WHEN m.marks >= e.min_marks AND m.marks != -1 THEN 1 ELSE 0 END) AS passCount,
-            SUM(CASE WHEN m.marks < e.min_marks AND m.marks != -1 THEN 1 ELSE 0 END) AS failCount,
-            COUNT(CASE WHEN m.marks != -1 THEN 1 END) AS totalCount
-        FROM Marks m
-        JOIN Exams e ON m.course_code = e.course_code AND m.exam_name = e.exam_name
-        JOIN Student_details sd ON m.ID = sd.ID
-        GROUP BY sd.year
-        ORDER BY sd.year;
-    `;
-    
-
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error fetching pass/fail statistics:', err);
-            res.status(500).send('Server error');
-        } else {
-            // Calculate pass percentage
-            const yearStats = results.map(row => {
-                const total = row.totalCount;
-                const passPercentage = total === 0 ? 0 : ((row.passCount / total) * 100).toFixed(2);
-                return {
-                    year: row.year,
-                    passCount: row.passCount,
-                    failCount: row.failCount,
-                    passPercentage: parseFloat(passPercentage)
-                };
-            });
-            res.json(yearStats);
-        }
-    });
+    } catch (err) {
+        console.error('Error deleting student:', err);
+        res.status(500).json({ error: 'Failed to delete student' });
+    }
 });
 
+// To get the pass/fail percentages for each year
+app.get('/yearlyPassFailStats', async (req, res) => {
+    try {
+        const stats = await sequelize.query(`
+            SELECT 
+                sd.year,
+                SUM(CASE WHEN m.marks >= e.min_marks AND m.marks != -1 THEN 1 ELSE 0 END) AS passCount,
+                SUM(CASE WHEN m.marks < e.min_marks AND m.marks != -1 THEN 1 ELSE 0 END) AS failCount,
+                COUNT(CASE WHEN m.marks != -1 THEN 1 END) AS totalCount
+            FROM marks m
+            JOIN exams e ON m.course_code = e.course_code AND m.exam_name = e.exam_name
+            JOIN student_details sd ON m.ID = sd.ID
+            GROUP BY sd.year
+            ORDER BY sd.year;
+        `, { type: sequelize.QueryTypes.SELECT });
+        const yearStats = stats.map(row => {
+            const total = row.totalCount;
+            const passPercentage = total === 0 ? 0 : ((row.passCount / total) * 100).toFixed(2);
+            return {
+                year: row.year,
+                passCount: row.passCount,
+                failCount: row.failCount,
+                passPercentage: parseFloat(passPercentage)
+            };
+        });
+        res.json(yearStats);
+    } catch (err) {
+        console.error('Error fetching pass/fail statistics:', err);
+        res.status(500).send('Server error');
+    }
+});
 
 // Endpoint to get the total number of students
 app.get('/totalStudents', async (req, res) => {
     try {
-        const results = await db.query('SELECT COUNT(*) AS totalStudents FROM Student_details');
-        res.json({ totalStudents: results[0].totalStudents });
+        const totalStudents = await Student.count();
+        res.json({ totalStudents });
     } catch (error) {
         console.error('Failed to retrieve total students:', error);
         res.status(500).json({ error: 'Failed to retrieve total students' });
@@ -493,36 +365,19 @@ app.get('/totalStudents', async (req, res) => {
 // Endpoint to get the total number of exams
 app.get('/totalExams', async (req, res) => {
     try {
-        const results = await db.query('SELECT COUNT(DISTINCT course_code) AS totalExams FROM Exams;');
-        res.json({ totalExams: results[0].totalExams });
+        const totalExams = await Exam.count({
+            distinct: true,
+            col: 'course_code'
+        });
+        res.json({ totalExams });
     } catch (error) {
         console.error('Failed to retrieve total exam results:', error);
         res.status(500).json({ error: 'Failed to retrieve total exam results' });
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.listen(8801, () => {
-    console.log("server running on port./");
-    console.log("server call");
+    console.log("server running on port 8801");
 });
 
 
